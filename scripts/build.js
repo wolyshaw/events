@@ -10,7 +10,7 @@ const { entrys } = require('./utils')
 
 const parmas = entrys()
 
-const RootPath = path.resolve(path.join(__dirname, parmas['-e'], parmas['-p']))
+const RootPath = path.resolve(path.join(__dirname, '../', parmas['-e'], parmas['-p']))
 
 const entry = path.join(RootPath, parmas['-s'])
 

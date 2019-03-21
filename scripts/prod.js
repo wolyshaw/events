@@ -12,7 +12,8 @@ module.exports  = options => {
   }))
 
   return merge(Base, {
-    entry: './src',
+    mode: 'production',
+    entry: options.entry,
     output: {
       publicPath: './'
     }
