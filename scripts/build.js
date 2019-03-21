@@ -5,8 +5,8 @@ const path = require('path')
 const util = require('util')
 const signale = require('signale')
 const webpack = require('webpack')
-const webpackConfig = require('./scripts/webpack')
-const { entrys } = require('./scripts/utils')
+const webpackConfig = require('./prod')
+const { entrys } = require('./utils')
 
 const parmas = entrys()
 
