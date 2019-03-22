@@ -30,7 +30,8 @@ const output = path.join(RootPath, parmas['-o'])
           filename: '[name]-[hash].js',
           publicPath: `./`
         },
-        template: parmas['-h']
+        template: parmas['-h'],
+        title: parmas['-t']
       }),
       (error, stats) => {
         if(error) {

@@ -5,6 +5,29 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title><%= htmlWebpackPlugin.options.title %></title>
+  <script>
+    ;(function(win) {
+      var doc = win.document,
+        html = doc.documentElement;
+      var baseWidth = 750,
+        grids = baseWidth / 100,
+        resizeEvt = 'orientationchange' in win ? 'orientationchange' : 'resize',
+        recalc = function() {
+          var clientWidth = html.clientWidth || 375;
+          if (clientWidth > baseWidth) {
+            clientWidth = baseWidth
+          };
+          var CLIENT_WIDTH = clientWidth / grids
+          html.style.fontSize = CLIENT_WIDTH + 'px';
+          win.CLIENT_WIDTH = CLIENT_WIDTH
+        };
+      if (!doc.addEventListener) return;
+      win.addEventListener(resizeEvt, recalc, false);
+      doc.addEventListener('DOMContentLoaded', function() {
+        setTimeout(recalc)
+      }, false);
+    })(window);
+  </script>
 </head>
 <body>
   <div id="app"></div>

@@ -2,7 +2,6 @@ const path = require('path')
 const signale = require('signale')
 const express = require('express')
 const env = process.env.NODE_ENV || 'development'
-// const config = require('./config')[env]
 const webpack = require('webpack')
 const httpProxy = require('http-proxy-middleware')
 const devServer = require('webpack-dev-middleware')
@@ -10,22 +9,18 @@ const hotServer = require('webpack-hot-middleware')
 const { entrys } = require('./utils')
 
 const parmas = entrys()
-console.log(parmas)
 
 const app = express()
 
-// const { dir, proxy, server } = config
 const PORT = 8000
 
 const RootPath = path.resolve(path.join(__dirname, '../', parmas['-e'], parmas['-p']))
-console.log(RootPath)
 
 app.use('/', express.static(path.join(RootPath, parmas['-s'])))
 
 const entry = path.join(RootPath, parmas['-s'])
 
 const output = path.join(RootPath, parmas['-o'])
-const webpackConfig = require('./dev')
 
 if(parmas['-P']) {
   const filters = (pathname, req) => req.method === 'POST' || /\.do$/.test(pathname)
@@ -44,7 +39,8 @@ if(env === 'development') {
       filename: '[name]-[hash].js',
       publicPath: `./`
     },
-    template: parmas['-h']
+    template: parmas['-h'],
+    title: parmas['-t']
   }))
   app.use(devServer(compiler))
   app.use(hotServer(compiler))

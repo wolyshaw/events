@@ -3,10 +3,16 @@ const HtmlWebpackPlugin = require('html-webpack-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const mode = process.env.NODE_ENV || 'development'
 
+const pxLoader = {
+  loader: 'px2rem-loader',
+  options: {
+    remPrecision: 5,
+    remUnit: 50
+  }
+}
+
 module.exports = options => {
-  const setting = Object.assign({
-    title: 'event',
-  }, options)
+  const setting = Object.assign({}, options)
   return {
     mode,
     entry: options.entry,
@@ -39,6 +45,7 @@ module.exports = options => {
           use: [
             MiniCssExtractPlugin.loader,
             'css-loader',
+            pxLoader,
           ]
         },
         {
@@ -47,6 +54,7 @@ module.exports = options => {
           use: [
             MiniCssExtractPlugin.loader,
             'css-loader',
+            pxLoader,
             {
               loader: 'less-loader',
               options: {
@@ -62,11 +70,38 @@ module.exports = options => {
           use: [
             MiniCssExtractPlugin.loader,
             'css-loader?modules&localIdentName=[local]--[hash:base64:5]',
+            pxLoader,
+            {
+              loader: 'postcss-loader',
+              options: {
+                plugins: () => ([
+                  require('postcss-import'),
+                  require('postcss-custom-properties')(),
+                  require('autoprefixer')({browsers: ['ios >= 7.0']})
+                ])
+              }
+            },
             {
               loader: 'less-loader',
             }
           ]
         },
+        {
+          test: /\.(jpg|png|jpeg|gif)$/,
+          exclude: /node_modules/,
+          use: {
+            loader: 'url-loader',
+            options: {
+              limit: 1,
+              fallback: 'file-loader'
+            }
+          }
+        },
+        {
+          test: /\.svg$/,
+          exclude: /node_modules/,
+          loader: 'svg-sprite-loader',
+        }
       ]
     },
     resolve: {
