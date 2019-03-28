@@ -1,12 +1,10 @@
-const package = require('../package.json')
-
 exports.entrys = () => {
-  const parmas = Object.assign({
+  const parmas = {
     '-s': 'src',
     '-o': 'dist',
     '-e': 'pages',
     '-h': 'static/index.html',
-  }, package.events)
+  }
 
   for (let i = 0; i < process.argv.length; i++) {
     const p = process.argv[i]

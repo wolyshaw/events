@@ -1,0 +1,40 @@
+.model{
+  // visibility: hidden;
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  .mask{
+    background-color: rgba(0, 0, 0, .3);
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+  }
+  .close{
+    width: 25px;
+    height: 25px;
+    position: absolute;
+    right: 0;
+    transform: translate(20%, -120%);
+    use {
+      fill: #fff;
+    }
+  }
+  .container{
+    max-width: 90%;
+    background-color: #fff;
+    border-radius: 5px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    .content{
+      margin: 20px;
+      overflow: hidden;
+      overflow-y: auto;
+    }
+  }
+}

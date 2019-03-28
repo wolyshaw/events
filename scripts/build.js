@@ -8,20 +8,27 @@ const webpack = require('webpack')
 const webpackConfig = require('./prod')
 const { entrys } = require('./utils')
 
+let config = {}
+
 const parmas = entrys()
 
-const RootPath = path.resolve(path.join(__dirname, '../', parmas['-e'], parmas['-p']))
+const RootPath = process.env.INIT_CWD || process.env.PWD || process.cwd()
+
+const ConfigPath = path.join(RootPath, 'config.js')
 
 const entry = path.join(RootPath, parmas['-s'])
 
-const output = path.join(RootPath, parmas['-o'])
-
 ;(async () => {
-  const hasSrc = await util.promisify(fs.stat)(entry)
-    .then(stat => stat.isDirectory())
-    .catch(() => false)
+  const hasConfig = await util.promisify(fs.stat)(ConfigPath).then(stat => stat.isFile()).catch(() => false),
+    hasSrc = await util.promisify(fs.stat)(path.join(RootPath, config.entry || parmas['-s'])).then(stat => stat.isDirectory()).catch(() => false)
 
   if(hasSrc) {
+    if(hasConfig) {
+      config = require(ConfigPath)
+    }
+    const entry = path.join(RootPath, config.entry || parmas['-s'])
+    const output = path.join(RootPath, config.output || parmas['-o'])
+
     webpack(
       webpackConfig({
         entry,
@@ -30,8 +37,8 @@ const output = path.join(RootPath, parmas['-o'])
           filename: '[name]-[hash].js',
           publicPath: `./`
         },
-        template: parmas['-h'],
-        title: parmas['-t']
+        template: config.template || parmas['-h'],
+        title: config.title || parmas['-t']
       }),
       (error, stats) => {
         if(error) {
