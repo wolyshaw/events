@@ -1,12 +1,12 @@
 module.exports = {
   port: 8000,
-  title: '付款',
+  title: 'events',
   proxy: {
-    target: 'https://dev.lanjingfenqi.com',
+    target: 'https://www.google.com',
     changeOrigin: true,
     secure: false
   },
   proxyFilters(pathname, req) {
-    return req.method === 'POST' || /\.do$/.test(pathname)
+    return req.method === 'POST'
   }
 }
