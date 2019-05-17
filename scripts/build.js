@@ -13,21 +13,20 @@ let config = {}
 const parmas = entrys()
 
 const RootPath = process.env.INIT_CWD || process.env.PWD || process.cwd()
-
-const ConfigPath = path.join(RootPath, 'config.js')
-
-const entry = path.join(RootPath, parmas['-s'])
+const paths = RootPath.split(path.sep)
+const lastIndex = paths.lastIndexOf(parmas['-s'])
+const ConfigPath = path.join(RootPath, 'events.config.js')
 
 ;(async () => {
   const hasConfig = await util.promisify(fs.stat)(ConfigPath).then(stat => stat.isFile()).catch(() => false),
-    hasSrc = await util.promisify(fs.stat)(path.join(RootPath, config.entry || parmas['-s'])).then(stat => stat.isDirectory()).catch(() => false)
-
+    hasSrc = await util.promisify(fs.stat)(RootPath).then(stat => stat.isDirectory()).catch(() => false)
   if(hasSrc) {
     if(hasConfig) {
       config = require(ConfigPath)
     }
-    const entry = path.join(RootPath, config.entry || parmas['-s'])
-    const output = path.join(RootPath, config.output || parmas['-o'])
+    paths[lastIndex] = (config.output || parmas['-o'])
+    const entry = path.join(RootPath)
+    const output = path.join('/', ...paths)
 
     webpack(
       webpackConfig({
@@ -53,6 +52,6 @@ const entry = path.join(RootPath, parmas['-s'])
       }
     )
   } else {
-    return signale.fatal(Error(`目录: ${entry} 不存在`))
+    return signale.fatal(Error(`目录不存在`))
   }
 })()

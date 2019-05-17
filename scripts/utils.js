@@ -2,7 +2,6 @@ exports.entrys = () => {
   const parmas = {
     '-s': 'src',
     '-o': 'dist',
-    '-e': 'pages',
     '-h': 'static/index.html',
   }
 

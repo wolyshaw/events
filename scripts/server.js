@@ -17,12 +17,13 @@ const parmas = entrys()
 const app = express()
 
 const RootPath = process.env.INIT_CWD || process.env.PWD || process.cwd()
-
-const ConfigPath = path.join(RootPath, 'config.js')
+const paths = RootPath.split(path.sep)
+const lastIndex = paths.lastIndexOf(parmas['-s'])
+const ConfigPath = path.join(RootPath, 'events.config.js')
 
 ;(async () => {
   const hasConfig = await util.promisify(fs.stat)(ConfigPath).then(stat => stat.isFile()).catch(() => false),
-    hasSrc = await util.promisify(fs.stat)(path.join(RootPath, config.entry || parmas['-s'])).then(stat => stat.isDirectory()).catch(() => false)
+    hasSrc = await util.promisify(fs.stat)(path.join(RootPath)).then(stat => stat.isDirectory()).catch(() => false)
 
   if(hasSrc) {
     if(hasConfig) {
@@ -33,10 +34,11 @@ const ConfigPath = path.join(RootPath, 'config.js')
       }
     }
     const port = config.port || 8000
-    const entry = path.join(RootPath, config.entry || parmas['-s'])
-    const output = path.join(RootPath, config.output || parmas['-o'])
+    paths[lastIndex] = (config.output || parmas['-o'])
+    const entry = path.join(RootPath)
+    const output = path.join('/', ...paths)
 
-    app.use('/', express.static(path.join(RootPath, config.entry || parmas['-s'])))
+    app.use('/', express.static(path.join(RootPath)))
 
     if(env === 'development') {
       const webpackConfig = require('./dev')
@@ -71,7 +73,7 @@ const ConfigPath = path.join(RootPath, 'config.js')
       })
     }
   } else {
-    return signale.fatal(Error(`目录: ${entry} 不存在`))
+    return signale.fatal(Error(`目录不存在`))
   }
 })()
 
